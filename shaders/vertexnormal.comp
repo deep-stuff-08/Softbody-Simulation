@@ -1,0 +1,26 @@
+#version 460 core
+
+layout(local_size_x = 1) in;
+
+layout(binding = 0, std430)buffer face {
+	int faceList[];
+};
+
+layout(binding = 1, std430)buffer nors {
+    vec4 nor[];
+};
+
+layout(binding = 2, std430)buffer fnors {
+	vec4 facenormals[];
+};
+
+void main() {
+	uint i = gl_GlobalInvocationID.x;
+	nor[i] = vec4(0.0);
+	for(int j = 0; j < 6; j++) {
+		int f = faceList[i * 6 + j];
+		if(f != -1) {
+			nor[i] += facenormals[f];
+		}
+	}
+}
